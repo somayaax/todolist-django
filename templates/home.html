@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{%block content%}
+<div class="todo-list py-5 rounded shadow shadow-lg">
+    <h1 class="mb-2">To-Do List</h1>
+    <button class="bg-add rounded px-2 py-1 mb-2">
+        <a class="text-decoration-none text-white" href="{% url 'create' %}">Create new todo</a>
+    </button>
+    <div class="input-group mb-5 w-50 m-auto">
+        <form method="GET" class="w-100 d-flex">
+            <input type="text" class="form-control" name="q" value="{{req.GET.q}}" placeholder="search in todos" aria-describedby="basic-addon1">
+            <span class="input-group-text bg-add"><i class="bi bi-search text-white"></i></span>
+        </form>
+    </div>
+    {% for todo in todos %}
+    <div class="tasks">
+        <div class="w-75 m-auto text-start">
+            <div class="bg-light mb-2 rounded d-flex justify-content-between">
+                <a href="{% url 'details' todo.id %}" class="p-2 text-decoration-none text-black">{{todo.name}}</a>
+                <div class="icons d-flex">
+                    <div class="icon">
+                        <a href="{% url 'update' todo.id %}">
+                            <i class="bi bi-pencil-fill text-white"></i>
+                        </a>
+                    </div>
+                    <div class="icon bg-danger">
+                        <a href="{% url 'delete' todo.id %}">
+                            <i class="bi bi-trash3-fill text-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{%endblock content%}

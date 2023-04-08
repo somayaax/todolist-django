@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="">
+    <h2 class="text-center mt-5  text-decoration-underline">{{todo.name}}</h2>
+    {% if todo.is_Completed %}
+    <p class="text-center fs-2" style="color: rgb(1, 185, 1);"><i class="bi bi-check-square-fill"></i>Done</p>
+    {% else %}
+    <p class="text-center fs-2 text-danger"><i class="bi bi-arrow-clockwise"></i>Task In Progress</p>
+    {% endif %}
+
+    <div class="list-group w-50 mx-auto my-5">
+        {% if items %}
+        <h4>ToDo Steps</h4>
+        {% endif %}
+        {% for item in items %}
+        <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{item}}</h5>
+                <small>{{item.created_at}}</small>
+            </div>
+            <p class="mb-1">{{item.getDesc}}</p>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
