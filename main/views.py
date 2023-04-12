@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Todo, TodoItem
-from .forms import TodoForm
+from .forms import TodoForm, UserCreate
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
-
-
 def home(req):
-    todos = Todo.objects.all().order_by('-created_at')
+    try:
+        user = req.user
+        todos = Todo.objects.all().filter(user= user).order_by('-created_at')
+    except:
+        return redirect('/signin')
+
     query = req.GET.get('q')
     if query:
         todos = Todo.objects.filter(name__icontains=query)
@@ -17,8 +23,11 @@ def home(req):
     return render(req, 'home.html', context)
 
 def completed(req):
-    todos = Todo.objects.all().order_by('-created_at')
-    todos = todos.filter(is_Completed=True)
+    try:
+        user = req.user
+        todos = Todo.objects.all().filter(user= user, is_Completed = True).order_by('-created_at')
+    except:
+        return redirect('/signin')
     query = req.GET.get('q')
     if query:
         todos = todos.filter(name__icontains=query)
@@ -39,7 +48,7 @@ def details(req,id):
     return render(req, 'details.html',context)
 
 def create(req):
-    form = TodoForm()
+    form = TodoForm(initial={'user': req.user})
     if req.method == 'POST':
         form = TodoForm(req.POST)
         if form.is_valid():
@@ -67,3 +76,32 @@ def delete(req, id):
     todo = Todo.objects.get(id=id)
     todo.delete()
     return redirect('/') 
+
+def signup(req):
+    form = UserCreate()
+    if req.method == 'POST':
+        form = UserCreate(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/signin')
+    context = {
+        "form" : form,
+    }
+    return render(req, 'signup.html', context)
+
+def signin(req):
+    if req.method == 'POST':
+        username = req.POST.get('username')
+        password = req.POST.get('password')
+        user = authenticate(username = username, password = password)
+        if user is not None:
+            login(req, user)
+            return redirect('/')
+    context={
+
+    }
+    return render(req, 'signin.html' , context)
+
+def signout(req):
+    logout(req)
+    return  redirect('/signin')

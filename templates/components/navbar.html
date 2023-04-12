@@ -17,6 +17,21 @@
                     <a class="nav-link text-white"  href="{% url 'completed' %}">Completed</a>
                 </li>
             </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+             
+                {% if user.is_authenticated %}
+                <li class="nav-item fs-3 mx-4">
+                    <a class="nav-link text-white"  href="{% url 'signout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item fs-3 mx-4">
+                    <a class="nav-link text-white" aria-current="page" href="{% url 'signup' %}">Register</a>
+                </li>
+                <li class="nav-item fs-3 mx-4">
+                    <a class="nav-link text-white"  href="{% url 'signin' %}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

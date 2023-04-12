@@ -1,8 +1,9 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Todo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50)
     is_Completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -23,3 +24,5 @@ class TodoItem(models.Model):
     
     def getDesc(self): 
         return self.description[:150]+'...'
+    
+
